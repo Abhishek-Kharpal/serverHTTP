@@ -53,5 +53,24 @@ http.createServer((request,response)=>{
       console.log(data);
     });
   }
+  else if((request.url.includes('/tasks'))&&(request.method==='PATCH')){
+    let body=[];
+    let urlTree = (request.url.split('/'));
+    let id = parseInt(urlTree[urlTree.length-1]);
+    request.on('data',chunk=>{
+      body.push(JSON.parse(chunk));
+    });
+    request.on('end',()=>{
+      data.forEach((element)=>{
+        if(element.id===id){
+          Object.keys(body[0]).forEach((key)=> {
+            element[key]=body[0][key];
+            console.log(element);
+          });
+        }
+      });
+      console.log(body);
+    });
+  }
   response.end();
 }).listen(3000);
